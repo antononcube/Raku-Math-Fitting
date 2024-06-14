@@ -13,15 +13,22 @@ my @data1 =
         (10.723949075934968e0, 10.54745313463026e0), (11.389785159542825e0, 10.928944887584644e0),
         (13.167988368224217e0, 12.856756553879103e0), (11.019424327650983e0, 10.472888033769635e0);
 
-ok linear-model-fit(@data1, 'BestFitParameters');
+ok linear-regression(@data1, 'BestFitParameters');
 
 ## 2
-isa-ok linear-model-fit(@data1, 'BestFitParameters'), Hash:D;
+isa-ok linear-regression(@data1, 'BestFitParameters'), Hash:D;
 
 ## 3
-isa-ok linear-model-fit(@data1), Callable:D;
+isa-ok linear-regression(@data1), Callable:D;
 
 ## 4
-isa-ok linear-model-fit(@data1, 'Function'), Callable:D;
+isa-ok linear-regression(@data1, 'Function'), Callable:D;
+
+## 5
+my @data5 = 1 .. 5;
+is-deeply
+        linear-regression(@data5, 'BestFitParameters'),
+        %(slope => 1.0, intercept => 0.0),
+        "Trivial data fitting";
 
 done-testing;

@@ -22,14 +22,15 @@ my @data =
         (12.212327463463307e0, 11.782617762483701e0), (11.479897117669006e0, 11.355095745306354e0),
         (13.320906155798967e0, 12.6405552706939e0);
 
-my &mf = linear-model-fit(@data);
+say linear-regression(@data, 'BestFitParameters');
 
-say &mf('BestFitParameters');
+my &f = linear-regression(@data);
 
-say &mf(1);
-say &mf([1,]);
-say &mf.response;
+say &f(1);
 
-say &mf.fit-residuals;
+say &f(1...5);
 
-say (10...13)».&mf;
+say (0...11)».&f;
+
+say linear-regression(@data, 'Residuals');
+

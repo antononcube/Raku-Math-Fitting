@@ -10,6 +10,17 @@ multi sub fit($data, *%args) {
 }
 
 #----------------------------------------------------------
+proto sub linear-regression(|) is export {*}
+
+multi sub linear-regression($data, $prop, *%args) {
+    return Math::Fitting::LinearModel::LinearRegression($data, :$prop, |%args);
+}
+
+multi sub linear-regression($data, *%args) {
+    return Math::Fitting::LinearModel::LinearRegression($data, |%args);
+}
+
+#----------------------------------------------------------
 proto sub linear-model-fit(|) is export {*}
 
 multi sub linear-model-fit($data, $prop, *%args) {

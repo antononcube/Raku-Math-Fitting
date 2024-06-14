@@ -11,6 +11,7 @@
   "test-depends": [],
   "provides": {
     "Math::Fitting": "lib/Math/Fitting.rakumod",
+    "Math::Fitting::FittedModel": "lib/Math/Fitting/FittedModel.rakumod",
     "Math::Fitting::LinearModel": "lib/Math/Fitting/LinearModel.rakumod"
   },
   "resources": [

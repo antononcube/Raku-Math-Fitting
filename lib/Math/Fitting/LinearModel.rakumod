@@ -2,27 +2,30 @@ use v6.d;
 
 unit module Math::Fitting::LinearModel;
 
+use Math::Fitting::FittedModel;
+
 sub is-positional-of-lists($obj, UInt $l) is export {
     $obj ~~ Positional && ([and] $obj.map({ $_ ~~ List && $_.elems == $l }))
 }
 
 #----------------------------------------------------------
-# Fit
+# LinearRegression
 #----------------------------------------------------------
+# MVP version of Fit kept of testing;
 
-our proto sub Fit(|) {*}
+our proto sub LinearRegression(|) {*}
 
-multi sub Fit(@data where @data.all ~~ Numeric:D, *%args) {
+multi sub LinearRegression(@data where @data.all ~~ Numeric:D, *%args) {
     my $k = 1;
     my @data2 = @data.map({ ($k++, $_) });
-    return Fit(@data2, |%args);
+    return LinearRegression(@data2, |%args);
 }
 
-multi sub Fit($data where $data ~~ Seq, *%args) {
-    return Fit($data.List, |%args);
+multi sub LinearRegression($data where $data ~~ Seq, *%args) {
+    return LinearRegression($data.List, |%args);
 }
 
-multi sub Fit($data where is-positional-of-lists($data, 2), :p(:$prop) is copy = Whatever) {
+multi sub LinearRegression($data where is-positional-of-lists($data, 2), :p(:$prop) is copy = Whatever) {
 
     if $prop.isa(Whatever) {
         $prop = 'Function';
@@ -45,7 +48,7 @@ multi sub Fit($data where is-positional-of-lists($data, 2), :p(:$prop) is copy =
     my $intercept = ($sum-y - $slope * $sum-x) / $n;
 
     return do given $prop.lc {
-        when $_ ∈ <BestFitParameters params best-fit-parameters>».lc {
+        when $_ ∈ <BestFitParameters params best-fit-parameters coefficients>».lc {
             %(:$slope, :$intercept)
         }
         when $_ ∈ <function func callable> {
@@ -57,7 +60,7 @@ multi sub Fit($data where is-positional-of-lists($data, 2), :p(:$prop) is copy =
                 }
             }
         }
-        when $_ eq 'residuals' {
+        when $_ ∈ <residuals FitResiduals>».lc {
             # It would be nice to use the function created above.
             # (($slope <<*<< $data.map(*.head) >>+>> $intercept) Z- $data.map(*.tail))».abs;
             # The following line is easier to read than the above line:
@@ -67,4 +70,33 @@ multi sub Fit($data where is-positional-of-lists($data, 2), :p(:$prop) is copy =
             die "Unknown property spec.";
         }
     }
+}
+
+
+#----------------------------------------------------------
+# Fit
+#----------------------------------------------------------
+
+our proto sub Fit(|) {*}
+
+multi sub Fit(@data where @data.all ~~ Numeric:D, *%args) {
+    my $k = 1;
+    my @data2 = @data.map({ ($k++, $_) });
+    return Fit(@data2, |%args);
+}
+
+multi sub Fit($data where $data ~~ Seq, *%args) {
+    return Fit($data.List, |%args);
+}
+
+multi sub Fit($data where is-positional-of-lists($data, 2), :p(:$prop) is copy = Whatever) {
+    if $prop.isa(Whatever) {
+        $prop = 'Function';
+    }
+
+    my @coefficients = LinearRegression($data, prop => 'BestFitParameters')<intercept slope>;
+
+    my $res = Math::Fitting::FittedModel.new(type => 'linear', :@coefficients, data => $data.Array, response-index => 1);
+
+    return $res;
 }

@@ -1,0 +1,34 @@
+use v6.d;
+use Test;
+
+use lib <. lib>;
+
+use Math::Fitting;
+
+## 1
+my @data1 =
+        (11.773906839650255e0, 11.253864992156679e0), (12.171286902172696e0, 12.009204578014298e0),
+        (12.107713405070312e0, 11.437962903093876e0), (12.696829332236298e0, 12.00401094268482e0),
+        (11.28266350477445e0, 11.499283586840601e0), (12.585056018658895e0, 11.775388329493465e0),
+        (10.723949075934968e0, 10.54745313463026e0), (11.389785159542825e0, 10.928944887584644e0),
+        (13.167988368224217e0, 12.856756553879103e0), (11.019424327650983e0, 10.472888033769635e0);
+
+isa-ok linear-model-fit(@data1), Callable:D;
+
+## 2
+isa-ok linear-model-fit(@data1)('BestFitParameters'), Iterable:D;
+
+## 3
+isa-ok linear-model-fit(@data1).function(), Callable:D;
+
+## 4
+isa-ok linear-model-fit(@data1)('Function'), Callable:D;
+
+## 5
+my @data5 = 1 .. 5;
+is-deeply
+        linear-model-fit(@data5)('BestFitParameters'),
+        [0.0, 1.0],
+        "Trivial data fitting";
+
+done-testing;
