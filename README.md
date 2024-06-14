@@ -6,6 +6,12 @@ Raku package for line, curve, and hyper-plane fitting into sets of points.
 
 ## Installation
 
+From [Zef ecosystem](https://raku.land):
+
+```
+zef install Math::Fitting
+```
+
 From GitHub:
 
 ```
