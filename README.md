@@ -48,7 +48,9 @@ my @data =
 # 29
 ```
 
-Here is a corresponding plot:
+**Remark:** The data was taken from ["Data::Geographics"](https://raku.land/zef:antononcube/Data::Geographics), [AAp1].
+
+Here is a corresponding plot (using ["Text::Plot"](https://raku.land/zef:antononcube/Text::Plot), [AAp2]):
 
 ```raku
 use Text::Plot;
@@ -127,3 +129,22 @@ text-list-plot(&f('residuals'))
 # +---+--------+--------+--------+---------+--------+--------+     
 #     0.00     5.00     10.00    15.00     20.00    25.00
 ```
+
+------
+
+## References
+
+[AAp1] Anton Antonov, 
+[Data::Geographics Raku package](https://github.com/antononcube/Raku-Data-Geographics),
+(2024),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp2] Anton Antonov, 
+[Text::Plot Raku package](https://github.com/antononcube/Raku-Text-Plot),
+(2022-2023),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[PSp1] Paweł Szulc,
+[Statistics::LinearRegression Raku package](https://github.com/hipek8/p6-Statistics-LinearRegression),
+(2017),
+[GitHub/hipek8](https://github.com/hipek8).
