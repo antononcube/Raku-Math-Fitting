@@ -21,7 +21,9 @@
     "fitting",
     "regression",
     "linear regression",
-    "linear"
+    "linear",
+    "linear model",
+    "linear model fit"
   ],
   "api": "0",
   "source-url": "https://github.com/antononcube/Raku-Math-Fitting.git",
