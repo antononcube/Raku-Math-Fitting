@@ -82,6 +82,15 @@ text-list-plot(&f('residuals'))
 
 ------
 
+## TODO
+
+- [ ] TODO Implementation
+  - [ ] TODO Multi-dimensional Linear Model Fit (LMF)
+  - [ ] TODO Using user specified function basis
+  - [ ] TODO More LMF diagnostics
+
+------
+
 ## References
 
 [AAp1] Anton Antonov, 
