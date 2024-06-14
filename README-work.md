@@ -88,6 +88,10 @@ text-list-plot(&f('residuals'))
   - [ ] TODO Multi-dimensional Linear Model Fit (LMF)
   - [ ] TODO Using user specified function basis
   - [ ] TODO More LMF diagnostics
+  - [ ] TODO CLI for most common data specs
+    - [ ] TODO Just a list of numbers
+    - [ ] TODO String that is Raku full array
+    - [ ] TODO String that is a JSON array
 
 ------
 
