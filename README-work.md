@@ -42,28 +42,30 @@ Here is a corresponding plot:
 ```raku
 use Text::Plot;
 
-text-list-plot(@data, title => 'lg(GDP) vs lg(Electricity prodction)', x-label => 'GDP', y-label => 'EP');
+text-list-plot(@data, title => 'lg(GDP) vs lg(Electricity Production)', x-label => 'GDP', y-label => 'EP');
 ```
 
-Here is corresponding linear model fit:
+Here is corresponding linear model fit, a functor (i.e. objects that does `Callable`):
 
 ```raku
 use Math::Fitting;
-say linear-model-fit(@data, 'BestFitParameters');
+my &f = linear-model-fit(@data);
 ```
 
-By default `linear-model-fit` gives a function (`Callable`):
+Here are the best fit parameters (fit coefficients):
 
 ```raku
-my &f = linear-model-fit(@data);
+&f('BestFitParameters');
+```
 
-say &f(1...4);
+Here we call the functor over a range of values:
 
-say (10...13)».&f;
+```raku
+(10...13)».&f
 ```
 
 Here are the corresponding residuals:
 
 ```raku
-text-list-plot(linear-model-fit(@data, 'residuals'))
+text-list-plot(&f('residuals'))
 ```

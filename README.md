@@ -45,10 +45,10 @@ Here is a corresponding plot:
 ```raku
 use Text::Plot;
 
-text-list-plot(@data, title => 'lg(GDP) vs lg(Electricity prodction)', x-label => 'GDP', y-label => 'EP');
+text-list-plot(@data, title => 'lg(GDP) vs lg(Electricity Production)', x-label => 'GDP', y-label => 'EP');
 ```
 ```
-# lg(GDP) vs lg(Electricity prodction)            
+# lg(GDP) vs lg(Electricity Production)            
 # +--------+-------+-------+-------+--------+-------+-------++         
 # +                                                          +  13.00  
 # |                                                    * *   |         
@@ -68,34 +68,38 @@ text-list-plot(@data, title => 'lg(GDP) vs lg(Electricity prodction)', x-label =
 #                             GDP
 ```
 
-Here is corresponding linear model fit:
+Here is corresponding linear model fit, a functor (i.e. objects that does `Callable`):
 
 ```raku
 use Math::Fitting;
-say linear-model-fit(@data, 'BestFitParameters');
+my &f = linear-model-fit(@data);
 ```
 ```
-# {intercept => 0.6719587872748085, slope => 0.9049080671822028}
+# Math::Fitting::FittedModel(type => linear, data => (29, 2), response-index => 1)
 ```
 
-By default `linear-model-fit` gives a function (`Callable`):
+Here are the best fit parameters (fit coefficients):
 
 ```raku
-my &f = linear-model-fit(@data);
-
-say &f(1...4);
-
-say (10...13)».&f;
+&f('BestFitParameters');
 ```
 ```
-# [1.5768668544570112 2.4817749216392144 3.386682988821417 4.29159105600362]
+# [0.6719587872748085 0.9049080671822028]
+```
+
+Here we call the functor over a range of values:
+
+```raku
+(10...13)».&f
+```
+```
 # (9.721039459096838 10.62594752627904 11.530855593461244 12.435763660643445)
 ```
 
 Here are the corresponding residuals:
 
 ```raku
-text-list-plot(linear-model-fit(@data, 'residuals'))
+text-list-plot(&f('residuals'))
 ```
 ```
 # +---+--------+--------+--------+---------+--------+--------+     
