@@ -1,6 +1,6 @@
 # Math::Fitting
 
-Raku package for line, curve, and hyper-plane fitting into sets of points.
+Raku package for line, curve, and hyper-plane fitting over sets of points.
 
 ------
 
