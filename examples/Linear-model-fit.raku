@@ -32,3 +32,5 @@ say &f(1...5);
 
 say (0...11)».&f;
 
+say linear-model-fit(@data, 'Residuals');
+

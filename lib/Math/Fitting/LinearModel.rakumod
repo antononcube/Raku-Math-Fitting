@@ -57,6 +57,12 @@ multi sub Fit($data where is-positional-of-lists($data, 2), :p(:$prop) is copy =
                 }
             }
         }
+        when $_ eq 'residuals' {
+            # It would be nice to use the function created above.
+            # (($slope <<*<< $data.map(*.head) >>+>> $intercept) Z- $data.map(*.tail))».abs;
+            # The following line is easier to read than the above line:
+            $data.map({ $slope * $_.head + $intercept - $_.tail }).Array
+        }
         default {
             die "Unknown property spec.";
         }
