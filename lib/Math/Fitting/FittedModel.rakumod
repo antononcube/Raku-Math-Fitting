@@ -17,7 +17,7 @@ class Math::Fitting::FittedModel
                 self.data.map({
                     my @x = $_.clone;
                     my $r = @x.splice($!response-index, 1);
-                    &f(@x) >>-<< $r
+                    $r >>-<< &f(@x)
                 }).map(*.head);
 
         return @res;
