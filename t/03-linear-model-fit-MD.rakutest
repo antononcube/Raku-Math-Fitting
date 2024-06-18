@@ -1,0 +1,30 @@
+use v6.d;
+use Test;
+
+use lib <. lib>;
+
+use Math::Fitting;
+
+## 1
+my @data1 =
+        [1.0, 1.0, 0.9092974268256817], [1.0, 2.0, 0.1411200080598672], [1.0, 3.0, -0.7568024953079283],
+        [2.0, 1.0, 0.1411200080598672], [2.0, 2.0, -0.7568024953079283], [2.0, 3.0, -0.9589242746631385];
+
+isa-ok linear-model-fit(@data1), Callable:D;
+
+## 2
+isa-ok linear-model-fit(@data1)('BestFitParameters'), Iterable:D;
+
+## 3
+isa-ok linear-model-fit(@data1).function(), Callable:D;
+
+## 4
+isa-ok linear-model-fit(@data1)('Function'), Callable:D;
+
+## 5
+is-approx
+        max(linear-model-fit(@data1)('BestFitParameters') Z- [2.10368431611712145, -0.622740567162940067, -0.691536051214153925]),
+        1.00e-12,
+        "Expected best fit parameters";
+
+done-testing;
