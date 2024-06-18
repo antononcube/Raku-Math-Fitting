@@ -1,12 +1,14 @@
 {
   "name": "Math::Fitting",
   "description": "Raku package with algorithms for line, curve, and hyper-plane fitting over sets of points.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "authors": [
     "Anton Antonov"
   ],
   "auth": "zef:antononcube",
-  "depends": [],
+  "depends": [
+    "Math::Matrix:ver<0.3.9+>:auth<github:pierre-vigier>"
+  ],
   "build-depends": [],
   "test-depends": [],
   "provides": {
@@ -23,7 +25,9 @@
     "linear regression",
     "linear",
     "linear model",
-    "linear model fit"
+    "linear model fit",
+    "multidimensional",
+    "multidimensional regression"
   ],
   "api": "0",
   "source-url": "https://github.com/antononcube/Raku-Math-Fitting.git",
