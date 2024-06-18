@@ -1,7 +1,7 @@
 {
   "name": "Math::Fitting",
   "description": "Raku package with algorithms for line, curve, and hyper-plane fitting over sets of points.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "authors": [
     "Anton Antonov"
   ],
@@ -14,7 +14,9 @@
   "provides": {
     "Math::Fitting": "lib/Math/Fitting.rakumod",
     "Math::Fitting::FittedModel": "lib/Math/Fitting/FittedModel.rakumod",
-    "Math::Fitting::LinearModel": "lib/Math/Fitting/LinearModel.rakumod"
+    "Math::Fitting::LinearModel": "lib/Math/Fitting/LinearModel.rakumod",
+    "Math::Fitting::LinearRegression": "lib/Math/Fitting/LinearRegression.rakumod",
+    "Math::Fitting::Predicates": "lib/Math/Fitting/Predicates.rakumod"
   },
   "resources": [
   ],
