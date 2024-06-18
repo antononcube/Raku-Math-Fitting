@@ -22,6 +22,8 @@ zef install https://github.com/antononcube/Raku-Math-Fitting.git
 
 ## Usage examples
 
+### Linear regression (1D regressor)
+
 Here is data that is an array of pairs logarithms of GDP and electricity production of different countries:
 
 ```raku
@@ -78,6 +80,44 @@ Here are the corresponding residuals:
 
 ```raku
 text-list-plot(&f('residuals'))
+```
+
+### Multidimensional regression (2D regressor)
+
+Here is a matrix with 3D data:
+
+```perl6
+use Data::Reshapers;
+
+(1..2) X (1..3)
+==> { .map({ [|$_, sin($_.sum)] }) }()
+==> my @data3D;
+
+to-pretty-table(@data3D);
+````
+
+Here is a functor for the multidimensional fit: 
+
+```perl6
+my &mf = linear-model-fit(@data3D);
+```
+
+Here are the best parameters:
+
+```perl6
+&mf('BestFitParameters');
+```
+
+Here is a predicated value:
+
+```perl6
+&mf(2.5, 2.5);
+```
+
+Here is plot of the residuals:
+
+```perl6
+text-list-plot(&mf.fit-residuals);
 ```
 
 ------

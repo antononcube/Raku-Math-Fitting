@@ -22,6 +22,8 @@ zef install https://github.com/antononcube/Raku-Math-Fitting.git
 
 ## Usage examples
 
+### Linear regression (1D regressor)
+
 Here is data that is an array of pairs logarithms of GDP and electricity production of different countries:
 
 ```raku
@@ -114,20 +116,97 @@ text-list-plot(&f('residuals'))
 ```
 # +---+--------+--------+--------+---------+--------+--------+     
 # |                                                          |     
-# +                     *                         *          + 0.60
-# +                                                          + 0.40
-# |            *                                             |     
-# +      *            *   *            *        *            + 0.20
-# |   *    *                  *          *               *   |     
-# +                *        *                         *      + 0.00
+# +          *                                               + 0.60
+# |                                                          |     
+# +    *                                    *          *     + 0.40
+# +                 *          *           *                 + 0.20
 # |              *               * * *        *     *        |     
-# +                 *          *           *                 +-0.20
-# |    *                                    *          *     |     
+# +                         *                         *      + 0.00
+# |   *    *       *          *          *               *   |     
+# +      *            *   *            *        *            +-0.20
+# |            *                                             |     
 # +                                                          +-0.40
-# +          *                                               +-0.60
+# +                     *                         *          +-0.60
 # |                                                          |     
 # +---+--------+--------+--------+---------+--------+--------+     
 #     0.00     5.00     10.00    15.00     20.00    25.00
+```
+
+### Multidimensional regression (2D regressor)
+
+Here is a matrix with 3D data:
+
+```perl6
+use Data::Reshapers;
+
+(1..2) X (1..3)
+==> { .map({ [|$_, sin($_.sum)] }) }()
+==> my @data3D;
+
+to-pretty-table(@data3D);
+```
+```
+# +---+---+---------------------+
+# | 0 | 1 |          2          |
+# +---+---+---------------------+
+# | 1 | 1 |  0.9092974268256817 |
+# | 1 | 2 |  0.1411200080598672 |
+# | 1 | 3 | -0.7568024953079283 |
+# | 2 | 1 |  0.1411200080598672 |
+# | 2 | 2 | -0.7568024953079283 |
+# | 2 | 3 | -0.9589242746631385 |
+# +---+---+---------------------+
+````
+
+Here is a functor for the multidimensional fit: 
+
+```perl6
+my &mf = linear-model-fit(@data3D);
+```
+```
+# Math::Fitting::FittedModel(type => linear, data => (6, 3), response-index => 2)
+```
+
+Here are the best parameters:
+
+```perl6
+&mf('BestFitParameters');
+```
+```
+# [2.1036843161171217 -0.62274056716294 -0.6915360512141538]
+```
+
+Here is a predicated value:
+
+```perl6
+&mf(2.5, 2.5);
+```
+```
+# -1.182007229825613
+```
+
+Here is plot of the residuals:
+
+```perl6
+text-list-plot(&mf.fit-residuals);
+```
+```
+# +---+---------+---------+----------+---------+---------+---+     
+# +                                                          + 0.30
+# |                                                      *   |     
+# +                                                          + 0.20
+# |                                                          |     
+# +   *                                                      + 0.10
+# |             *                                            |     
+# +                                                          + 0.00
+# |                                  *                       |     
+# |                                                          |     
+# +                                                          +-0.10
+# |                       *                                  |     
+# +                                            *             +-0.20
+# |                                                          |     
+# +---+---------+---------+----------+---------+---------+---+     
+#     0.00      1.00      2.00       3.00      4.00      5.00
 ```
 
 ------
