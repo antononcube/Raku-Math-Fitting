@@ -6,9 +6,14 @@ class Math::Fitting::FittedModel
     has @.data;
     has $.response-index;
     has @.coefficients;
+    has $.basis;
 
     method best-fit-parameters() {
         return self.coefficients;
+    }
+
+    method basis-functions() {
+        return self.basis;
     }
 
     method fit-residuals() {
@@ -28,7 +33,14 @@ class Math::Fitting::FittedModel
     }
 
     method function() {
-        -> *@x { sum([1, |@x] >>*<< self.coefficients) }
+        if $!basis.isa(Whatever) || $!basis.isa(WhateverCode) {
+            -> *@x { sum([1, |@x] >>*<< self.coefficients) }
+        } else {
+            -> *@x {
+                my @row = $!basis.map({ $_(|@x) });
+                sum(@row >>*<< self.coefficients)
+            }
+        }
     }
 
     method design-matrix() {
@@ -41,6 +53,9 @@ class Math::Fitting::FittedModel
 
     method get-property($prop is copy = Whatever) {
         return do given $prop.lc {
+            when $_ ∈ <BasisFunctions basis-functions basis>».lc {
+                self.basis;
+            }
             when $_ ∈ <BestFitParameters params best-fit-parameters coefficients>».lc {
                 self.best-fit-parameters();
             }
@@ -73,14 +88,22 @@ class Math::Fitting::FittedModel
     }
 
     multi method CALL-ME(*@x) {
-        return sum([1, |@x] >>*<< self.coefficients);
+        if $!basis.isa(Whatever) || $!basis.isa(WhateverCode) {
+            return sum([1, |@x] >>*<< self.coefficients);
+        } else {
+            my @row = $!basis.map({ $_(|@x) });
+            return sum(@row >>*<< self.coefficients);
+        }
     }
 
     #======================================================
     # Representation
     #======================================================
     multi method gist(::?CLASS:D:-->Str) {
-        return "Math::Fitting::FittedModel(type => { $!type }, data => ({ @!data.elems }, { @!data.head.elems }), response-index => { $!response-index })";
+        return "Math::Fitting::FittedModel(type => { $!type }, " ~
+                "data => ({ @!data.elems }, { @!data.head.elems }), " ~
+                "response-index => { $!response-index }, " ~
+                "basis => { $!basis ~~ Iterable:D ?? $!basis.elems !! 'Whatever'})";
     }
 
     method Str() {

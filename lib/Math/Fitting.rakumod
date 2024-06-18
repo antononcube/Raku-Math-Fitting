@@ -24,10 +24,18 @@ multi sub linear-regression($data, *%args) {
 #----------------------------------------------------------
 proto sub linear-model-fit(|) is export {*}
 
-multi sub linear-model-fit($data, $prop, *%args) {
-    return Math::Fitting::LinearModel::Fit($data, :$prop, |%args);
+multi sub linear-model-fit($data, $basis-functions, *%args) {
+    return Math::Fitting::LinearModel::Fit($data, :$basis-functions, |%args);
+}
+
+multi sub linear-model-fit($data, $basis-functions, $prop, *%args) {
+    return Math::Fitting::LinearModel::Fit($data, :$basis-functions, :$prop, |%args);
 }
 
 multi sub linear-model-fit($data, *%args) {
     return Math::Fitting::LinearModel::Fit($data, |%args);
+}
+
+multi sub linear-model-fit(:$data, *%args) {
+    return Math::Fitting::LinearModel::Fit(:$data, |%args);
 }
