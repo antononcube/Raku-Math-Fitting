@@ -1,6 +1,7 @@
 unit module Math::Fitting;
 
 use Math::Fitting::LinearModel;
+use Math::Fitting::LinearRegression;
 
 #----------------------------------------------------------
 proto sub fit(|) is export {*}
@@ -13,11 +14,11 @@ multi sub fit($data, *%args) {
 proto sub linear-regression(|) is export {*}
 
 multi sub linear-regression($data, $prop, *%args) {
-    return Math::Fitting::LinearModel::LinearRegression($data, :$prop, |%args);
+    return Math::Fitting::LinearRegression::Fit($data, :$prop, |%args);
 }
 
 multi sub linear-regression($data, *%args) {
-    return Math::Fitting::LinearModel::LinearRegression($data, |%args);
+    return Math::Fitting::LinearRegression::Fit($data, |%args);
 }
 
 #----------------------------------------------------------
