@@ -18,3 +18,4 @@ say &mf([1, 2]);
 say &mf.response;
 
 say &mf.fit-residuals;
+say &mf.basis-functions;
