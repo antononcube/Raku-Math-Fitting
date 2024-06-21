@@ -87,7 +87,7 @@ use Math::Fitting;
 my &f = linear-model-fit(@data);
 ```
 ```
-# Math::Fitting::FittedModel(type => linear, data => (29, 2), response-index => 1)
+# Math::Fitting::FittedModel(type => linear, data => (29, 2), response-index => 1, basis => 2)
 ```
 
 Here are the best fit parameters (fit coefficients):
@@ -102,11 +102,12 @@ Here are the best fit parameters (fit coefficients):
 Here we call the functor over a range of values:
 
 ```raku
-(10...13)».&f
+(10..13)».&f
 ```
 ```
 # (9.721039459096838 10.62594752627904 11.530855593461244 12.435763660643445)
 ```
+
 
 Here are the corresponding residuals:
 
@@ -164,7 +165,7 @@ Here is a functor for the multidimensional fit:
 my &mf = linear-model-fit(@data3D);
 ```
 ```
-# Math::Fitting::FittedModel(type => linear, data => (6, 3), response-index => 2)
+# Math::Fitting::FittedModel(type => linear, data => (6, 3), response-index => 2, basis => Whatever)
 ```
 
 Here are the best parameters:
@@ -209,13 +210,90 @@ text-list-plot(&mf.fit-residuals);
 #     0.00      1.00      2.00       3.00      4.00      5.00
 ```
 
+### Using function basis
+
+Data:
+
+```perl6
+use Data::Generators;
+
+my @data = (-1, -0.95 ... 1);
+@data = @data.map({ [$_, sqrt(abs($_/2)) + sin($_*2) + random-real((-0.25, 0.25))] });
+
+text-list-plot(@data);
+```
+```
+# +---+------------+-----------+------------+------------+---+      
+# +                                                          +  2.00
+# |                                           *** **** **    |      
+# +                                         *            *   +  1.50
+# |                                                          |      
+# +                                     * **                 +  1.00
+# |                                   **                     |      
+# |                                  *                       |      
+# +                               **                         +  0.50
+# |                       *  * * *                           |      
+# +                 *   *     *                              +  0.00
+# |   ***  *   *   * *   *  *                                |      
+# +      *  **  **    *                                      + -0.50
+# |                                                          |      
+# +---+------------+-----------+------------+------------+---+      
+#     -1.00        -0.50       0.00         0.50         1.00
+```
+
+Basis functions:
+
+```perl6
+my @basis = {1}, {$_}, {-1 + 2 * $_ **2}, {-3 * $_ + 4 * $_ **3}, {1 - 8 * $_ ** 2 + 8 * $_ **4};
+```
+```
+# [-> ;; $_? is raw = OUTER::<$_> { #`(Block|3831690270616) ... } -> ;; $_? is raw = OUTER::<$_> { #`(Block|3831690270688) ... } -> ;; $_? is raw = OUTER::<$_> { #`(Block|3831690270760) ... } -> ;; $_? is raw = OUTER::<$_> { #`(Block|3831690270832) ... } -> ;; $_? is raw = OUTER::<$_> { #`(Block|3831690270904) ... }]
+```
+
+Compute the fit and show the best fit parameters:
+
+```perl6
+my &mf = linear-model-fit(@data, :@basis);
+
+say 'BestFitParameters : ', &mf('BestFitParameters');
+```
+```
+# BestFitParameters : [0.551799047700142 1.173011790424553 0.2158197987446535 -0.2733280230300862 -0.1178403498782696]
+```
+
+Plot the residuals:
+
+```perl6
+text-list-plot(&mf('FitResiduals'));
+```
+```
+# +---+------------+-----------+------------+------------+---+     
+# |                                                          |     
+# |                 *     *                                  |     
+# +                     *                                    + 0.20
+# |                                     *   * *              |     
+# +   **             *       *                 *       *     + 0.10
+# |            *   *                            *  *    *    |     
+# +        *                                                 + 0.00
+# |     *        *            **  *   **          *          |     
+# |                      *           *    *          *       |     
+# +          *  *           *                       *    *   +-0.10
+# |                   *          *                           |     
+# +      *  *                      *       *                 +-0.20
+# |                                                          |     
+# +---+------------+-----------+------------+------------+---+     
+#     0.00         10.00       20.00        30.00        40.00
+```
+
+(Compare the plot values with the range of the added noise when `@data` is generated.)
+
 ------
 
 ## TODO
 
 - [ ] TODO Implementation
-  - [ ] TODO Multi-dimensional Linear Model Fit (LMF)
-  - [ ] TODO Using user specified function basis
+  - [X] DONE Multi-dimensional Linear Model Fit (LMF)
+  - [X] DONE Using user specified function basis
   - [ ] TODO More LMF diagnostics
   - [ ] TODO CLI for most common data specs
     - [ ] TODO Just a list of numbers

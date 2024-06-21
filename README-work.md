@@ -73,8 +73,9 @@ Here are the best fit parameters (fit coefficients):
 Here we call the functor over a range of values:
 
 ```raku
-(10...13)».&f
+(10..13)».&f
 ```
+
 
 Here are the corresponding residuals:
 
@@ -120,13 +121,48 @@ Here is plot of the residuals:
 text-list-plot(&mf.fit-residuals);
 ```
 
+### Using function basis
+
+Data:
+
+```perl6
+use Data::Generators;
+
+my @data = (-1, -0.95 ... 1);
+@data = @data.map({ [$_, sqrt(abs($_/2)) + sin($_*2) + random-real((-0.25, 0.25))] });
+
+text-list-plot(@data);
+```
+
+Basis functions:
+
+```perl6
+my @basis = {1}, {$_}, {-1 + 2 * $_ **2}, {-3 * $_ + 4 * $_ **3}, {1 - 8 * $_ ** 2 + 8 * $_ **4};
+```
+
+Compute the fit and show the best fit parameters:
+
+```perl6
+my &mf = linear-model-fit(@data, :@basis);
+
+say 'BestFitParameters : ', &mf('BestFitParameters');
+```
+
+Plot the residuals:
+
+```perl6
+text-list-plot(&mf('FitResiduals'));
+```
+
+(Compare the plot values with the range of the added noise when `@data` is generated.)
+
 ------
 
 ## TODO
 
 - [ ] TODO Implementation
-  - [ ] TODO Multi-dimensional Linear Model Fit (LMF)
-  - [ ] TODO Using user specified function basis
+  - [X] DONE Multi-dimensional Linear Model Fit (LMF)
+  - [X] DONE Using user specified function basis
   - [ ] TODO More LMF diagnostics
   - [ ] TODO CLI for most common data specs
     - [ ] TODO Just a list of numbers
