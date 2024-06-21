@@ -42,7 +42,7 @@ multi sub Fit($data where is-positional-of-lists($data, 2), :b(:$basis) is copy 
                 :@coefficients,
                 data => $data.Array,
                 response-index => 1,
-                basis-functions => [{ 1 }, { $_ }]);
+                basis => [{ 1 }, { $_ }]);
 
         return $res;
     } else {
