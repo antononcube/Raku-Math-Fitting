@@ -5,6 +5,8 @@ use lib <. lib>;
 
 use Math::Fitting;
 
+plan *;
+
 ## 1
 my @data1 =
         (11.773906839650255e0, 11.253864992156679e0), (12.171286902172696e0, 12.009204578014298e0),
@@ -25,6 +27,13 @@ isa-ok linear-model-fit(@data1).function(), Callable:D;
 isa-ok linear-model-fit(@data1)('Function'), Callable:D;
 
 ## 5
+my &f5 = linear-model-fit(@data1);
+is &f5([9,]), &f5(9);
+
+## 6
+is (10..13)>>.&f5.all ~~ Numeric:D, True;
+
+## 6
 my @data5 = 1 .. 5;
 is-deeply
         linear-model-fit(@data5)('BestFitParameters'),

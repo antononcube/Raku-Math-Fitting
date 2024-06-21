@@ -5,6 +5,8 @@ use lib <. lib>;
 
 use Math::Fitting;
 
+plan *;
+
 ## 1
 my @data1 =
         [1.0, 1.0, 0.9092974268256817], [1.0, 2.0, 0.1411200080598672], [1.0, 3.0, -0.7568024953079283],
@@ -22,6 +24,13 @@ isa-ok linear-model-fit(@data1).function(), Callable:D;
 isa-ok linear-model-fit(@data1)('Function'), Callable:D;
 
 ## 5
+my &f5 = linear-model-fit(@data1);
+is &f5([2.3, 2.2]), &f5(2.3, 2.2);
+
+## 6
+is [[1, 1], [2.5, 3.5], [2.3, 2.2]].map(-> @_ { &f5(@_) }).all ~~ Numeric:D, True;
+
+## 7
 is-approx
         max(linear-model-fit(@data1)('BestFitParameters') Z- [2.10368431611712145, -0.622740567162940067, -0.691536051214153925]),
         1.00e-12,
