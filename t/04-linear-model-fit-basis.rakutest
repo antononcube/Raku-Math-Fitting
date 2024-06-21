@@ -1,0 +1,51 @@
+use v6.d;
+use Test;
+
+use lib <. lib>;
+
+use Math::Fitting;
+
+## 1
+my @data1 =
+        (11.773906839650255e0, 11.253864992156679e0), (12.171286902172696e0, 12.009204578014298e0),
+        (12.107713405070312e0, 11.437962903093876e0), (12.696829332236298e0, 12.00401094268482e0),
+        (11.28266350477445e0, 11.499283586840601e0), (12.585056018658895e0, 11.775388329493465e0),
+        (10.723949075934968e0, 10.54745313463026e0), (11.389785159542825e0, 10.928944887584644e0),
+        (13.167988368224217e0, 12.856756553879103e0), (11.019424327650983e0, 10.472888033769635e0);
+
+my @basis = {1}, {$_}, {$_ ** 2}, {$_ ** 3};
+
+isa-ok linear-model-fit(@data1, :@basis), Callable:D;
+
+## 2
+isa-ok linear-model-fit(@data1, :@basis)('BestFitParameters'), Iterable:D;
+
+## 3
+isa-ok linear-model-fit(@data1, :@basis).function(), Callable:D;
+
+## 4
+isa-ok linear-model-fit(@data1, :@basis)('Function'), Callable:D;
+
+## 5
+is-approx
+        max(linear-model-fit(@data1, :@basis)('BestFitParameters') Z- [-438.6967727204683, 113.12444822150053, -9.523540609440026, 0.26857133268667166]),
+        1.00e-12,
+        "Expected best fit parameters";
+
+# Using Mathematica to verify the obtained parameters:
+#`[
+```raku
+use Mathematica::Serializer;
+say encode-to-wl(@data1);
+```
+]
+
+#`[
+```mathematica
+basis = {1, x, x^2, x^3};
+lm = LinearModelFit[data, basis, x];
+lm["BestFitParameters"] // FullForm
+# List[-438.6967722516011`,113.12444803494417`,-9.523540593814387`,0.2685713322210098`]
+```
+]
+done-testing;
