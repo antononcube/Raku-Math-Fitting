@@ -1,5 +1,6 @@
 use v6.d;
 
+#| Fitted model class (does Callable.)
 class Math::Fitting::FittedModel
         does Callable {
     has $.type;
@@ -8,14 +9,17 @@ class Math::Fitting::FittedModel
     has @.coefficients;
     has $.basis;
 
+    #| Best fit parameters
     method best-fit-parameters() {
         return self.coefficients;
     }
 
+    #| Basis functions
     method basis-functions() {
         return self.basis;
     }
 
+    #| Fit residuals
     method fit-residuals() {
         my &f = self.function();
         my @res =
@@ -28,10 +32,12 @@ class Math::Fitting::FittedModel
         return @res;
     }
 
+    #| Standardized residuals
     method standardized-residuals() {
         die "Not implemented.";
     }
 
+    #| Function (weighted sum of the coefficients and the basis)
     method function() {
         if $!basis.isa(Whatever) || $!basis.isa(WhateverCode) {
             -> *@x { sum([1, |@x] >>*<< self.coefficients) }
@@ -43,14 +49,27 @@ class Math::Fitting::FittedModel
         }
     }
 
+    #| Design matrix
     method design-matrix() {
-        die "Not implemented.";
+        # The code below is duplicated in Math::Fitting::LinearModel::Fit,
+        # But the code is short, hence placed here.
+        # This probably can be cached, either in this class and/or by the client class.
+        die "The basis is not a list of callables."
+        unless $!basis ~~ Positional:D && $!basis.all ~~ Callable:D;
+
+        my @X = @!data.map({
+            my @res = $!basis.map(-> &f { &f(|$_.head(*- 1)) });
+            @res
+        });
+        return @X;
     }
 
+    #| Response variable (column)
     method response() {
         return @!data.map({ $_[$!response-index] }).Array;
     }
 
+    #| Universal properties retrieval method
     method get-property($prop is copy = Whatever) {
         return do given $prop.lc {
             when $_ ∈ <BasisFunctions basis-functions basis>».lc {
